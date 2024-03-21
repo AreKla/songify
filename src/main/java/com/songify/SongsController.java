@@ -1,5 +1,6 @@
 package com.songify;
 
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,19 @@ import java.util.stream.Collectors;
 @Log4j2
 public class SongsController {
 
-    Map<Integer, String> database = new HashMap<>(Map.of(1, "Podsiadło song1", 2, "Pezet song2", 3, "O.S.T.R. song3", 4, "Magik song4"));
+    Map<Integer, String> database = new HashMap<>(Map.of(
+            1, "Podsiadło song1",
+            2, "Pezet song2",
+            3, "O.S.T.R. song3",
+            4, "Magik song4"));
 
     @GetMapping("/songs")
     public ResponseEntity<SongResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
         if (limit != null) {
-            Map<Integer, String> limitedMap = database.entrySet().stream().limit(limit).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            Map<Integer, String> limitedMap = database.entrySet()
+                    .stream()
+                    .limit(limit)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             SongResponseDto response = new SongResponseDto(limitedMap);
             return ResponseEntity.ok(response);
         }
@@ -38,7 +46,7 @@ public class SongsController {
     }
 
     @PostMapping("/songs")
-    public ResponseEntity<SingleSongResponseDto> postSong(@RequestBody SongRequestDto request) {
+    public ResponseEntity<SingleSongResponseDto> postSong(@RequestBody @Valid SongRequestDto request) {
         String songName = request.songName();
         log.info("Adding new song: " + songName);
         database.put(database.size() + 1, songName);
