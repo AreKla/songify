@@ -52,4 +52,10 @@ public class SongRestController {
         return ResponseEntity.ok("You deleted song with id: " + id);
     }
 
+    @DeleteMapping("/songs")
+    public ResponseEntity<String> deleteSongByIdUsingQueryParam(@RequestParam("id") Integer id) {
+        database.remove(id);
+        return ResponseEntity.ok("You deleted song with id: " + id);
+    }
+
 }
