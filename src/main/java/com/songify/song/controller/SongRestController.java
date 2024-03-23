@@ -29,9 +29,10 @@ public class SongRestController {
     public ResponseEntity<SongResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
         if (limit != null) {
             Map<Integer, String> limitedMap = database.entrySet()
-                    .stream()
-                    .limit(limit)
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                                                      .stream()
+                                                      .limit(limit)
+                                                      .collect(
+                                                              Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             SongResponseDto response = new SongResponseDto(limitedMap);
             return ResponseEntity.ok(response);
         }
@@ -43,11 +44,10 @@ public class SongRestController {
     public ResponseEntity<SingleSongResponseDto> getSongById(@PathVariable Integer id,
                                                              @RequestHeader(required = false) String requestId) {
         log.info(requestId);
-        String song = database.get(id);
-        if (song == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .build();
+        if (!database.containsKey(id)) {
+            throw new SongNotFoundException("Song with id: " + id + " not found");
         }
+        String song = database.get(id);
         SingleSongResponseDto response = new SingleSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
@@ -71,6 +71,9 @@ public class SongRestController {
 
     @DeleteMapping("/songs")
     public ResponseEntity<String> deleteSongByIdUsingQueryParam(@RequestParam("id") Integer id) {
+        if (!database.containsKey(id)) {
+            throw new SongNotFoundException("Song with id: " + id + " not found");
+        }
         database.remove(id);
         return ResponseEntity.ok("You deleted song with id: " + id);
     }
