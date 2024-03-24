@@ -1,6 +1,6 @@
 package com.songify.song.infrastructure.controller;
 
-import com.songify.song.domain.model.Song;
+import com.songify.song.model.SongEntity;
 import com.songify.song.infrastructure.controller.dto.request.CreateSongRequestDto;
 import com.songify.song.infrastructure.controller.dto.request.PartiallyUpdateSongRequestDto;
 import com.songify.song.infrastructure.controller.dto.request.UpdateSongRequestDto;
@@ -11,19 +11,19 @@ import java.util.Map;
 
 public class SongMapper {
 
-    public static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(Map<Integer, Song> database) {
+    public static GetAllSongsResponseDto mapFromSongToGetAllSongsResponseDto(Map<Integer, SongEntity> database) {
         return new GetAllSongsResponseDto(database);
     }
 
-    public static GetSongResponseDto mapFromSongToGetSongResponseDto(Song song) {
+    public static GetSongResponseDto mapFromSongToGetSongResponseDto(SongEntity song) {
         return new GetSongResponseDto(song);
     }
 
-    public static Song mapFromCreateSongRequestDtoToSong(CreateSongRequestDto dto) {
-        return new Song(dto.songName(), dto.artist());
+    public static SongEntity mapFromCreateSongRequestDtoToSong(CreateSongRequestDto dto) {
+        return new SongEntity(dto.songName(), dto.artist());
     }
 
-    public static CreateSongResponseDto mapFromSongToCreateSongResponseDto(Song song) {
+    public static CreateSongResponseDto mapFromSongToCreateSongResponseDto(SongEntity song) {
         return new CreateSongResponseDto(song);
     }
 
@@ -35,19 +35,19 @@ public class SongMapper {
         return new DeleteSongByRequestParamResponseDto("You deleted song with id: " + id, HttpStatus.OK);
     }
 
-    public static Song mapFromUpdateSongResponseDtoToSong(UpdateSongRequestDto dto) {
-        return new Song(dto.songName(), dto.artist());
+    public static SongEntity mapFromUpdateSongResponseDtoToSong(UpdateSongRequestDto dto) {
+        return new SongEntity(dto.songName(), dto.artist());
     }
 
-    public static UpdateSongResponseDto mapFromSongToUpdateSongResponseDto(Song newSong) {
+    public static UpdateSongResponseDto mapFromSongToUpdateSongResponseDto(SongEntity newSong) {
         return new UpdateSongResponseDto(newSong.name(), newSong.artist());
     }
 
-    public static Song mapFromPartiallyUpdateSongResponseDtoToSong(PartiallyUpdateSongRequestDto dto) {
-        return new Song(dto.songName(), dto.artist());
+    public static SongEntity mapFromPartiallyUpdateSongResponseDtoToSong(PartiallyUpdateSongRequestDto dto) {
+        return new SongEntity(dto.songName(), dto.artist());
     }
 
-    public static PartiallyUpdateSongResponseDto mapFromSongToPartiallyUpdateSongResponseDto(Song updatedSong) {
+    public static PartiallyUpdateSongResponseDto mapFromSongToPartiallyUpdateSongResponseDto(SongEntity updatedSong) {
         return new PartiallyUpdateSongResponseDto(updatedSong);
     }
 }

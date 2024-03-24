@@ -1,7 +1,7 @@
 package com.songify.song.infrastructure.controller;
 
-import com.songify.song.domain.model.Song;
-import com.songify.song.domain.model.SongNotFoundException;
+import com.songify.song.model.SongEntity;
+import com.songify.song.model.SongNotFoundException;
 import com.songify.song.infrastructure.controller.dto.request.CreateSongRequestDto;
 import com.songify.song.infrastructure.controller.dto.request.PartiallyUpdateSongRequestDto;
 import com.songify.song.infrastructure.controller.dto.request.UpdateSongRequestDto;
@@ -20,19 +20,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/songs")
 public class SongRestController {
 
-    Map<Integer, Song> database = new HashMap<>(Map.of(
-            1, new Song("song1", "Podsiadło"),
-            2, new Song("song2", "Pezet"),
-            3, new Song("song3", "O.S.T.R."),
-            4, new Song("song4", "Magik")));
+    Map<Integer, SongEntity> database = new HashMap<>(Map.of(
+            1, new SongEntity("song1", "Podsiadło"),
+            2, new SongEntity("song2", "Pezet"),
+            3, new SongEntity("song3", "O.S.T.R."),
+            4, new SongEntity("song4", "Magik")));
 
     @GetMapping
     public ResponseEntity<GetAllSongsResponseDto> getAllSongs(@RequestParam(required = false) Integer limit) {
         if (limit != null) {
-            Map<Integer, Song> limitedMap = database.entrySet()
-                                                    .stream()
-                                                    .limit(limit)
-                                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            Map<Integer, SongEntity> limitedMap = database.entrySet()
+                                                          .stream()
+                                                          .limit(limit)
+                                                          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             GetAllSongsResponseDto response = new GetAllSongsResponseDto(limitedMap);
             return ResponseEntity.ok(response);
         }
@@ -47,14 +47,14 @@ public class SongRestController {
         if (!database.containsKey(id)) {
             throw new SongNotFoundException("Song with id: " + id + " not found");
         }
-        Song song = database.get(id);
+        SongEntity song = database.get(id);
         GetSongResponseDto response = SongMapper.mapFromSongToGetSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<CreateSongResponseDto> postSong(@RequestBody @Valid CreateSongRequestDto request) {
-        Song song = SongMapper.mapFromCreateSongRequestDtoToSong(request);
+        SongEntity song = SongMapper.mapFromCreateSongRequestDtoToSong(request);
         log.info("Adding new song: " + song);
         database.put(database.size() + 1, song);
         CreateSongResponseDto body = SongMapper.mapFromSongToCreateSongResponseDto(song);
@@ -88,8 +88,8 @@ public class SongRestController {
         if (!database.containsKey(id)) {
             throw new SongNotFoundException("Song with id: " + id + " not found");
         }
-        Song newSong = SongMapper.mapFromUpdateSongResponseDtoToSong(request);
-        Song oldSong = database.put(id, newSong);
+        SongEntity newSong = SongMapper.mapFromUpdateSongResponseDtoToSong(request);
+        SongEntity oldSong = database.put(id, newSong);
         log.info("Updated song with id: " + id +
                  " with oldSongName: " + oldSong.name() + " to new songName: " + newSong.name() +
                  " oldArtist: " + oldSong.artist() + " to newArtist: " + newSong.artist());
@@ -104,9 +104,9 @@ public class SongRestController {
         if (!database.containsKey(id)) {
             throw new SongNotFoundException("Song with id: " + id + " not found");
         }
-        Song songFromDatabase = database.get(id);
-        Song updatedSong = SongMapper.mapFromPartiallyUpdateSongResponseDtoToSong(request);
-        Song.SongBuilder builder = Song.builder();
+        SongEntity songFromDatabase = database.get(id);
+        SongEntity updatedSong = SongMapper.mapFromPartiallyUpdateSongResponseDtoToSong(request);
+        SongEntity.SongEntityBuilder builder = SongEntity.builder();
         if (updatedSong.name() != null) {
             builder.name(updatedSong.name());
         } else {
