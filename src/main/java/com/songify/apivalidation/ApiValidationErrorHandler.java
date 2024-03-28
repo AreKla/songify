@@ -25,9 +25,9 @@ public class ApiValidationErrorHandler {
 
     private List<String> getErrorsFromException(MethodArgumentNotValidException exception) {
         return exception.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
+                        .getAllErrors()
+                        .stream()
+                        .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                        .collect(Collectors.toList());
     }
 }

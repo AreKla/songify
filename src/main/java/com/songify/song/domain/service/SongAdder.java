@@ -1,7 +1,7 @@
-package com.songify.song.service;
+package com.songify.song.domain.service;
 
-import com.songify.song.model.SongEntity;
-import com.songify.song.repository.SongRepository;
+import com.songify.song.domain.model.Song;
+import com.songify.song.domain.repository.SongRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ public class SongAdder {
         this.songRepository = songRepository;
     }
 
-    public SongEntity addSong(SongEntity song) {
+    public Song addSong(Song song) {
         log.info("Adding new song: " + song);
         songRepository.saveToDatabase(song);
         return song;
